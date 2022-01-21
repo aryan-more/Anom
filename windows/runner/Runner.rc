@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "A new Flutter project." "\0"
+            VALUE "CompanyName", "" "\0"
+            VALUE "FileDescription", "Anom is a open-source project that focuses on the user privacy and security." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "anom" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "anom.exe" "\0"
-            VALUE "ProductName", "anom" "\0"
+            VALUE "InternalName", "Anom" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 . All rights reserved." "\0"
+            VALUE "OriginalFilename", "Anom.exe" "\0"
+            VALUE "ProductName", "Anom" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

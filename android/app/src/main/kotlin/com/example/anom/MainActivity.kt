@@ -1,4 +1,4 @@
-package com.example.anom
+package io.privacybuddy.anom
 
 import io.flutter.embedding.android.FlutterActivity
 
