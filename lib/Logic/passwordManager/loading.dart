@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 void loadPassword(BuildContext context) async {
   // await Future.delayed(Duration(seconds: 7));
   Password password = Password();
-  print(await password.exist());
   if (await password.exist()) {
     await password.load();
     Navigator.of(context).pushReplacementNamed("/loginPassword", arguments: {"passwords": password});

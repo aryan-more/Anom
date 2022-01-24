@@ -82,7 +82,7 @@ class _AddOrEditPasswordDesktopState extends State<AddOrEditPasswordDesktop> wit
                         onPressed: () {
                           addPassword(context);
                         },
-                        child: Text("Submit"),
+                        child: const Text("Submit"),
                       ),
                       width: double.infinity,
                     )

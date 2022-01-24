@@ -22,7 +22,6 @@ class Password {
   }
 
   Future<bool> exist() async {
-    print((await getFile("passwords")).path);
     return (await (await getFile("passwords")).exists());
   }
 

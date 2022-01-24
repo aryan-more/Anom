@@ -14,11 +14,10 @@ class _PasswordMangerMenuDesktopState extends State<PasswordMangerMenuDesktop> w
   @override
   Widget build(BuildContext context) {
     loadPassword(context);
-    print(password.passwords);
     return Scaffold(
       appBar: bar(),
       body: Row(
-        children: [NavigationRouteRail(index: 1), Expanded(child: buildList(setState))],
+        children: [const NavigationRouteRail(index: 1), Expanded(child: buildList(setState))],
       ),
       floatingActionButton: floatingActionButton(context, setState),
     );

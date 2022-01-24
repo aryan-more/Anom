@@ -22,7 +22,6 @@ class Boot extends StatefulWidget {
 class _BootState extends State<Boot> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     onBoot(context);
   }

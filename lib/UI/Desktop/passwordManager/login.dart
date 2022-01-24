@@ -19,7 +19,7 @@ class _LoginPasswordManagerDesktopState extends State<LoginPasswordManagerDeskto
       appBar: bar(),
       body: Row(
         children: [
-          NavigationRouteRail(index: 1),
+          const NavigationRouteRail(index: 1),
           Expanded(
               child: Padding(
             padding: EdgeInsets.only(top: height * 0.25, bottom: height * 0.35, left: width * 0.26, right: width * 0.30),
@@ -27,7 +27,7 @@ class _LoginPasswordManagerDesktopState extends State<LoginPasswordManagerDeskto
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(color: Colors.grey[900], borderRadius: const BorderRadius.all(Radius.circular(15))),
                   child: Column(
                     children: [
@@ -56,8 +56,8 @@ class _LoginPasswordManagerDesktopState extends State<LoginPasswordManagerDeskto
                     onPressed: () {
                       login(context: context);
                     },
-                    label: Text("Login"),
-                    icon: Icon(Icons.arrow_right))
+                    label: const Text("Login"),
+                    icon: const Icon(Icons.arrow_right))
               ],
             ),
           ))

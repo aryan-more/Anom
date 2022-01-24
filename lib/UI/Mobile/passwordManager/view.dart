@@ -15,7 +15,7 @@ class _ViewPasswordMobileState extends State<ViewPasswordMobile> with ViewPasswo
     return Scaffold(
       appBar: AppBar(title: Text(password.passwords[index]["w"])),
       body: Padding(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -84,7 +84,7 @@ class _ViewPasswordMobileState extends State<ViewPasswordMobile> with ViewPasswo
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(

@@ -73,7 +73,6 @@ class AddOrEdit {
         };
       }
       onSave(password, context);
-      print("hee");
       state(() {});
       Navigator.of(context).pop();
       // pushReplacementNamed("/passwordMenu", arguments: {"passwords": password});

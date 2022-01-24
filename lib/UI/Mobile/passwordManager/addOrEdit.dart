@@ -14,10 +14,10 @@ class _AddOrEditPasswordMobileState extends State<AddOrEditPasswordMobile> with 
     onBoot(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Password"),
+        title: const Text("Add Password"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -28,7 +28,7 @@ class _AddOrEditPasswordMobileState extends State<AddOrEditPasswordMobile> with 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      padding: item[1] == "Password" ? EdgeInsets.only(top: 2, bottom: 10, left: 10, right: 10) : EdgeInsets.all(10),
+                      padding: item[1] == "Password" ? const EdgeInsets.only(top: 2, bottom: 10, left: 10, right: 10) : const EdgeInsets.all(10),
                       decoration: BoxDecoration(color: Colors.grey[900], borderRadius: const BorderRadius.all(Radius.circular(15))),
                       child: TextField(
                         controller: item[0],
@@ -45,7 +45,7 @@ class _AddOrEditPasswordMobileState extends State<AddOrEditPasswordMobile> with 
                                       obscure ? Icons.remove_red_eye_outlined : Icons.remove_red_eye,
                                       color: Colors.blue,
                                     ))
-                                : SizedBox()),
+                                : const SizedBox()),
                         obscureText: item[1] == "Password" ? obscure : false,
                       ),
                     ),
@@ -71,7 +71,7 @@ class _AddOrEditPasswordMobileState extends State<AddOrEditPasswordMobile> with 
                 onPressed: () {
                   addPassword(context);
                 },
-                child: Text("Submit"),
+                child: const Text("Submit"),
               ),
               width: double.infinity,
             )

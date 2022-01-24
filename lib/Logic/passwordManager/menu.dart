@@ -21,7 +21,7 @@ class PasswordMenu {
                 title: Text(password.passwords[index]["w"]),
                 subtitle: Text(password.passwords[index]["e"]),
                 tileColor: Colors.grey[900],
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                 onTap: () {
                   viewPassword(index, context, state);
                 },

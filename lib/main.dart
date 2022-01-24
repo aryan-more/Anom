@@ -13,6 +13,7 @@ import 'package:anom/UI/Mobile/passwordManager/passwordMenu.dart';
 import 'package:anom/UI/Mobile/passwordManager/passwordloading.dart';
 import 'package:anom/UI/Mobile/passwordManager/view.dart';
 import 'package:anom/UI/boot.dart';
+import 'package:anom/UI/platformNotSupported.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
@@ -23,7 +24,7 @@ void main() {
 
   runApp(MaterialApp(
     routes: {
-      "/": (context) => const Boot(),
+      "/": (context) => minSupport ? const Boot() : const PlatformNotSupported(),
       "/loadPasswords": (context) => isMobile ? const LoadingPasswordManagerMobile() : const LoadingPasswordManagerDesktop(),
       "/createPassword": (context) => isMobile ? const CreatePasswordMobile() : const CreatePasswordDesktop(),
       "/loginPassword": (context) => isMobile ? const LoginPasswordManagerMobile() : const LoginPasswordManagerDesktop(),

@@ -35,7 +35,7 @@ class ViewPassword {
         builder: (context) => AlertDialog(
               backgroundColor: Colors.grey[900],
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              title: Text("Confirm Delete"),
+              title: const Text("Confirm Delete"),
               content: TextButton(
                 onPressed: () async {
                   password.passwords.removeAt(index);

@@ -15,7 +15,7 @@ class _LoginPasswordManagerMobileState extends State<LoginPasswordManagerMobile>
     loadPassword(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login Password Manager"),
+        title: const Text("Login Password Manager"),
       ),
       drawer: DrawerRoute(
         index: 1,
@@ -25,9 +25,9 @@ class _LoginPasswordManagerMobileState extends State<LoginPasswordManagerMobile>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(),
+            const SizedBox(),
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(color: Colors.grey[900], borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: TextField(
                 decoration: InputDecoration(
@@ -54,8 +54,8 @@ class _LoginPasswordManagerMobileState extends State<LoginPasswordManagerMobile>
                   onPressed: () {
                     login(context: context);
                   },
-                  label: Text("Login"),
-                  icon: Icon(Icons.arrow_right)),
+                  label: const Text("Login"),
+                  icon: const Icon(Icons.arrow_right)),
             )
           ],
         ),

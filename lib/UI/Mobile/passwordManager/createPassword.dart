@@ -14,7 +14,7 @@ class _CreatePasswordMobileState extends State<CreatePasswordMobile> with Create
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Password"),
+        title: const Text("Create Password"),
       ),
       drawer: DrawerRoute(
         index: 1,
@@ -24,7 +24,7 @@ class _CreatePasswordMobileState extends State<CreatePasswordMobile> with Create
         children: [
           const SizedBox(),
           Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
                 for (var item in [

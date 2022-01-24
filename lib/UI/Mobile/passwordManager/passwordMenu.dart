@@ -15,11 +15,11 @@ class _PasswordMangerMenuMobileState extends State<PasswordMangerMenuMobile> wit
     loadPassword(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Password Manager"),
+        title: const Text("Password Manager"),
       ),
       drawer: DrawerRoute(index: 1),
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: buildList(setState),
       ),
       floatingActionButton: floatingActionButton(context, setState),

@@ -23,7 +23,7 @@ class _LoadingPasswordManagerDesktopState extends State<LoadingPasswordManagerDe
     return Scaffold(
       appBar: bar(),
       body: Row(
-        children: [
+        children: const <Widget>[
           NavigationRouteRail(index: 1),
           Expanded(
               child: Center(
