@@ -105,7 +105,7 @@ class _ViewPasswordDesktopState extends State<ViewPasswordDesktop> with ViewPass
                             style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Expanded(
