@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+final routes = ["/privacyCenter", "/loadPasswords"];
+
 class NavigationRouteRail extends StatelessWidget {
   final int index;
   const NavigationRouteRail({Key? key, required this.index}) : super(key: key);
@@ -18,6 +20,11 @@ class NavigationRouteRail extends StatelessWidget {
               NavigationRailDestination(icon: Icon(item[1] as IconData), label: Text(item[2] as String))
           ],
           selectedIndex: index,
+          onDestinationSelected: (x) {
+            if (index != x) {
+              Navigator.of(context).pushReplacementNamed(routes[x]);
+            }
+          },
           backgroundColor: Colors.black,
         ),
         VerticalDivider(

@@ -9,7 +9,7 @@ void onBoot(BuildContext context) async {
   if (!await dir.exists()) {
     await dir.create(recursive: true);
   }
-  Navigator.of(context).pushReplacementNamed("/loadPasswords");
+  Navigator.of(context).pushReplacementNamed("/privacyCenter");
 }
 
 class Boot extends StatefulWidget {

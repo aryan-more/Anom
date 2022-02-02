@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(anom LANGUAGES CXX)
 
-set(BINARY_NAME "anom")
+set(BINARY_NAME "Anom")
 
 cmake_policy(SET CMP0063 NEW)
 
@@ -79,7 +79,7 @@ if(PLUGIN_BUNDLED_LIBRARIES)
     DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endif()
-
+# SET_TARGET_PROPERTIES(CACHE PROPERTIES LINK_FLAGS "/MANIFESTUAC:\"level='requireAdministrator' uiAccess='false'\" /SUBSYSTEM:WINDOWS")
 # Fully re-copy the assets directory on each build to avoid having stale files
 # from a previous install.
 set(FLUTTER_ASSET_DIR_NAME "flutter_assets")

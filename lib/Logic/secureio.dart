@@ -45,3 +45,13 @@ Future<void> writeBin({required String filename, required Uint8List bits}) async
   File file = File((await getPath()) + "/$filename");
   await file.writeAsBytes(bits);
 }
+
+Future<String> read({required String filename}) async {
+  File file = File((await getPath()) + "/$filename");
+  return file.readAsString();
+}
+
+Future<void> write({required String filename, required String rawdata}) async {
+  File file = File((await getPath()) + "/$filename");
+  await file.writeAsString(rawdata);
+}
