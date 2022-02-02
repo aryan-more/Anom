@@ -10,7 +10,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_spinkit: ^5.1.0
+  encrypt: ^5.0.1
+  crypto: ^3.0.1
+  bitsdojo_window: ^0.1.1+1
+  path_provider: ^2.0.8
 jobs:
   build:
     runs-on: ubuntu-latest
