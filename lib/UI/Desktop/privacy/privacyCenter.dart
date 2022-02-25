@@ -12,7 +12,7 @@ class PrivacyCenterDesktop extends StatefulWidget {
   _PrivacyCenterDesktopState createState() => _PrivacyCenterDesktopState();
 }
 
-class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> {
+class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> with PrivacyCenter {
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> {
       appBar: bar(),
       body: Row(
         children: [
-          NavigationRouteRail(index: 0),
+          const NavigationRouteRail(index: 0),
           Expanded(
             child: Column(
               children: [
@@ -34,26 +34,25 @@ class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> {
                           toBlock[index]["Enable"] = x;
                         });
                       },
-                      title: Text(toBlock[index]["Title"].toUpperCase()),
+                      title: Text(capitalize(toBlock[index]["Title"])),
                       subtitle: Text(toBlock[index]["Subtitle"]),
                     ),
                   ),
                 ),
-                // TextField(
-                //   controller: controller,
-                // ),
-                TextButton(
-                  onPressed: () async {
-                    List<String> block = [];
-                    for (Map i in toBlock) {
-                      if (i["Enable"]) {
-                        block.add(i["Title"]);
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextButton(
+                    onPressed: () async {
+                      List<String> block = [];
+                      for (Map i in toBlock) {
+                        if (i["Enable"]) {
+                          block.add(i["Title"]);
+                        }
                       }
-                    }
-                    print(await callNativeWin(block));
-                    // print(await call(controller.text));
-                  },
-                  child: Text("Test"),
+                      print(await callNativeWin(block));
+                    },
+                    child: const Text("Block"),
+                  ),
                 )
               ],
             ),

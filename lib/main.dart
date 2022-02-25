@@ -13,6 +13,7 @@ import 'package:anom/UI/Mobile/passwordManager/login.dart';
 import 'package:anom/UI/Mobile/passwordManager/passwordMenu.dart';
 import 'package:anom/UI/Mobile/passwordManager/passwordloading.dart';
 import 'package:anom/UI/Mobile/passwordManager/view.dart';
+import 'package:anom/UI/Mobile/privacy/privacyCenter.dart';
 import 'package:anom/UI/boot.dart';
 import 'package:anom/UI/platformNotSupported.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ void main() {
       "/passwordMenu": (context) => isMobile ? const PasswordMangerMenuMobile() : const PasswordMangerMenuDesktop(),
       "/AddOrEditPassword": (context) => isMobile ? const AddOrEditPasswordMobile() : const AddOrEditPasswordDesktop(),
       "/viewPassword": (context) => isMobile ? const ViewPasswordMobile() : const ViewPasswordDesktop(),
-      "/privacyCenter": (context) => isMobile ? PlatformNotSupported() : PrivacyCenterDesktop(),
+      "/privacyCenter": (context) => isMobile ? PrivacyCenterMobile() : PrivacyCenterDesktop(),
     },
     theme: ThemeData(
         backgroundColor: Colors.black,
