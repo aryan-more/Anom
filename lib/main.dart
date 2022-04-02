@@ -1,41 +1,83 @@
 import 'dart:io';
 
+import 'package:anom/Logic/passwordManager/password.dart';
+import 'package:anom/Logic/privacyCenter.dart';
+import 'package:anom/Native/blockSubjects.dart';
 import 'package:anom/UI/Desktop/passwordManager/addOrEdit.dart';
 import 'package:anom/UI/Desktop/passwordManager/createPassword.dart';
 import 'package:anom/UI/Desktop/passwordManager/login.dart';
 import 'package:anom/UI/Desktop/passwordManager/passwordMenu.dart';
-import 'package:anom/UI/Desktop/passwordManager/passwordloading.dart';
 import 'package:anom/UI/Desktop/passwordManager/view.dart';
 import 'package:anom/UI/Desktop/privacy/privacyCenter.dart';
+import 'package:anom/UI/Desktop/settings.dart';
 import 'package:anom/UI/Mobile/passwordManager/addOrEdit.dart';
 import 'package:anom/UI/Mobile/passwordManager/createPassword.dart';
 import 'package:anom/UI/Mobile/passwordManager/login.dart';
 import 'package:anom/UI/Mobile/passwordManager/passwordMenu.dart';
-import 'package:anom/UI/Mobile/passwordManager/passwordloading.dart';
 import 'package:anom/UI/Mobile/passwordManager/view.dart';
 import 'package:anom/UI/Mobile/privacy/privacyCenter.dart';
+import 'package:anom/UI/Mobile/settings.dart';
 import 'package:anom/UI/boot.dart';
 import 'package:anom/UI/platformNotSupported.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  PrivacyCenter center = PrivacyCenter();
+  CustomUrls customUrls = CustomUrls();
+  Passwords paswords = Passwords();
+  await customUrls.loadUrls();
+  if (await paswords.exist()) {
+    await paswords.load();
+  }
+
+  await center.getSavedPrefernce();
+
   bool isDesktop = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
   bool isMobile = Platform.isAndroid || Platform.isIOS;
   bool minSupport = isDesktop || isMobile;
 
-  runApp(MaterialApp(
-    routes: {
-      "/": (context) => minSupport ? const Boot() : const PlatformNotSupported(),
-      "/loadPasswords": (context) => isMobile ? const LoadingPasswordManagerMobile() : const LoadingPasswordManagerDesktop(),
-      "/createPassword": (context) => isMobile ? const CreatePasswordMobile() : const CreatePasswordDesktop(),
-      "/loginPassword": (context) => isMobile ? const LoginPasswordManagerMobile() : const LoginPasswordManagerDesktop(),
-      "/passwordMenu": (context) => isMobile ? const PasswordMangerMenuMobile() : const PasswordMangerMenuDesktop(),
-      "/AddOrEditPassword": (context) => isMobile ? const AddOrEditPasswordMobile() : const AddOrEditPasswordDesktop(),
-      "/viewPassword": (context) => isMobile ? const ViewPasswordMobile() : const ViewPasswordDesktop(),
-      "/privacyCenter": (context) => isMobile ? PrivacyCenterMobile() : PrivacyCenterDesktop(),
-    },
-    theme: ThemeData(
+  runApp(
+    MaterialApp(
+      routes: {
+        "/": (context) => minSupport ? const Boot() : const PlatformNotSupported(),
+        "/loadPasswords": (context) => paswords.saveExist
+            ? isMobile
+                ? LoginPasswordManagerMobile(
+                    passwords: paswords,
+                  )
+                : LoginPasswordManagerDesktop(
+                    passwords: paswords,
+                  )
+            : isMobile
+                ? CreatePasswordMobile(
+                    passwords: paswords,
+                  )
+                : CreatePasswordDesktop(
+                    passwords: paswords,
+                  ),
+        "/passwordMenu": (context) => isMobile ? const PasswordMangerMenuMobile() : const PasswordMangerMenuDesktop(),
+        "/AddOrEditPassword": (context) => isMobile ? const AddOrEditPasswordMobile() : const AddOrEditPasswordDesktop(),
+        "/viewPassword": (context) => isMobile ? const ViewPasswordMobile() : const ViewPasswordDesktop(),
+        "/privacyCenter": (context) => isMobile
+            ? PrivacyCenterMobile(
+                center: center,
+              )
+            : PrivacyCenterDesktop(
+                center: center,
+              ),
+        "/settings": (context) => isMobile
+            ? SettingsMobile(
+                passwords: paswords,
+                customUrls: customUrls,
+              )
+            : SettingsDesktop(
+                passwords: paswords,
+                customUrls: customUrls,
+              ),
+      },
+      theme: ThemeData(
         backgroundColor: Colors.black,
         inputDecorationTheme: const InputDecorationTheme(border: UnderlineInputBorder()),
         brightness: Brightness.dark,
@@ -49,15 +91,18 @@ void main() {
             foregroundColor: MaterialStateProperty.all(Colors.white),
             shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
             textStyle: MaterialStateProperty.all(const TextStyle(
-              fontSize: 22,
+              fontSize: 20,
             )),
           ),
         ),
         scaffoldBackgroundColor: Colors.black,
         snackBarTheme: const SnackBarThemeData(
           backgroundColor: Colors.red,
-        )),
-  ));
+        ),
+      ),
+      initialRoute: "/",
+    ),
+  );
   if (isDesktop) {
     doWhenWindowReady(() {
       final win = appWindow;

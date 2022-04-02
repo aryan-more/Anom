@@ -1,9 +1,11 @@
 import 'package:anom/Logic/passwordManager/createPassword.dart';
+import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:anom/UI/Mobile/drawer.dart';
 import 'package:flutter/material.dart';
 
 class CreatePasswordMobile extends StatefulWidget {
-  const CreatePasswordMobile({Key? key}) : super(key: key);
+  const CreatePasswordMobile({Key? key, required this.passwords}) : super(key: key);
+  final Passwords passwords;
 
   @override
   _CreatePasswordMobileState createState() => _CreatePasswordMobileState();
@@ -57,7 +59,7 @@ class _CreatePasswordMobileState extends State<CreatePasswordMobile> with Create
               width: double.infinity,
               child: TextButton(
                 onPressed: () async {
-                  await validate(context: context);
+                  await validate(context: context, passwords: widget.passwords);
                 },
                 child: const Text("Create Password"),
               ),

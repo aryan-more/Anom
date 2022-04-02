@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final routes = ["/privacyCenter", "/loadPasswords"];
+final routes = ["/privacyCenter", "/loadPasswords", "/settings"];
 
 class NavigationRouteRail extends StatelessWidget {
   final int index;
@@ -15,7 +15,8 @@ class NavigationRouteRail extends StatelessWidget {
           destinations: [
             for (var item in [
               [0, Icons.shield, "Privacy Center"],
-              [1, Icons.vpn_key, "Password Manager"]
+              [1, Icons.vpn_key, "Password Manager"],
+              [2, Icons.settings, "Settings"]
             ])
               NavigationRailDestination(icon: Icon(item[1] as IconData), label: Text(item[2] as String))
           ],

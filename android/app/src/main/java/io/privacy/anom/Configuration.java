@@ -22,6 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Configuration class. This is serialized as JSON using read() and write() methods.
+ *
+ * @author Julian Andres Klode
+ */
 public class Configuration {
     static final int VERSION = 2;
     /* Default tweak level */

@@ -1,44 +1,27 @@
 package io.privacy.anom;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.net.VpnService;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
-import java.io.BufferedReader;
-import java.io.FileDescriptor;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
-import io.flutter.FlutterInjector;
 import io.flutter.embedding.android.FlutterActivity;
-import io.flutter.embedding.android.FlutterView;
 import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.embedding.engine.loader.FlutterLoader;
-import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.StandardMethodCodec;
 import io.privacy.anom.vpn.AnomVPNService;
 
 public class MainActivity extends FlutterActivity {
     private static final String Channel = "anom";
     final int REQUEST_START_VPN = 1;
-
     private void startService() {
         Log.i("Start", "Attempting to connect");
         Intent intent = VpnService.prepare(getContext());
@@ -49,13 +32,10 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
-    private boolean VpnStatus() {
-        return AnomVPNService.vpnStatus == AnomVPNService.VPN_STATUS_RUNNING;
-    }
-
-    private void startStopService() {
+    private boolean startStopService() {
         if (AnomVPNService.vpnStatus != AnomVPNService.VPN_STATUS_STOPPED) {
             Log.i("StartStop", "Attempting to disconnect");
+
             Intent intent = new Intent(getActivity(), AnomVPNService.class);
             intent.putExtra("COMMAND", AnomVPNService.Command.STOP.ordinal());
             getActivity().startService(intent);
@@ -63,17 +43,7 @@ public class MainActivity extends FlutterActivity {
             startService();
 
         }
-    }
-
-    private void writeToFile(String data, Context context) {
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("blocklist", Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
+        return true;
     }
 
     @Override
@@ -99,36 +69,38 @@ public class MainActivity extends FlutterActivity {
 
         }
     }
+    private void AnomwriteToFile(String data, Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("blocklist", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
     @Override
-    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine){
         super.configureFlutterEngine(flutterEngine);
-        BinaryMessenger messenger = flutterEngine.getDartExecutor().getBinaryMessenger();
-        AssetManager manager =  getAssets();
 
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),Channel).setMethodCallHandler(
+                (call,result) ->{
 
+                    if(call.method.equals("privacy")){
+                        String args = (String) call.arguments;
+                        AnomwriteToFile(args,getContext());
 
-        BinaryMessenger.TaskQueue queue = messenger.makeBackgroundTaskQueue();
-        new MethodChannel(messenger, Channel, StandardMethodCodec.INSTANCE, queue)
-                .setMethodCallHandler(
-                        (call, result) -> {
-                            try {
-                                if (call.method.equals("privacy")) {
-                                        String args = (String) call.arguments;
-                                        writeToFile(args,getContext());
-                                        startStopService();
-                                        result.success(null);
-
-                                } else if (call.method.equals("vpn")) {
-                                    result.success(VpnStatus());
-                                } else {
-                                    result.notImplemented();
-                                }
-
-                            } catch (Exception e) {
-                                result.error("",e.toString(),"Method Channel Failed");
-
-                            }
-                        });
+                        startStopService();
+                        boolean out = AnomVPNService.vpnStatus == AnomVPNService.VPN_STATUS_RUNNING;
+                        result.success(out);
+                    }
+                    else if (call.method.equals("status")){
+                        boolean out = AnomVPNService.vpnStatus == AnomVPNService.VPN_STATUS_RUNNING;
+                        result.success(out);
+                    }
+                }
+        );
     }
 
 }

@@ -28,8 +28,13 @@ String decrypt({required Uint8List bin, required List<int> hashedPassword}) {
 
 Future<String> getPath() async {
   var path = await getApplicationDocumentsDirectory();
-  // print(path);
   return "${path.path}/Anom";
+}
+
+Future<void> exportPasswords() async {
+  var path = await getExternalStorageDirectories(type: StorageDirectory.documents);
+  File file = File("${path!.first.path}/passwords.anomps");
+  print(path.first.path);
 }
 
 Future<File> getFile(String path) async {

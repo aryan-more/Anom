@@ -6,14 +6,8 @@ class LoginLogic {
   bool boot = true;
   bool obscure = true;
   TextEditingController controller = TextEditingController();
-  late Password password;
 
-  void loadPassword(BuildContext context) {
-    var temp = ModalRoute.of(context)!.settings.arguments as Map;
-    password = temp["passwords"];
-  }
-
-  void login({required BuildContext context}) {
+  void login({required BuildContext context, required Passwords password}) {
     if (password.checkPassword(controller.text)) {
       Navigator.of(context).pushReplacementNamed("/passwordMenu", arguments: {"passwords": password});
     } else {

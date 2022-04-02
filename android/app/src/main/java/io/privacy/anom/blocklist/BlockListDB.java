@@ -1,31 +1,34 @@
 package io.privacy.anom.blocklist;
 
+
+
 import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
-import java.util.Scanner;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BlockListDB {
-    private static final BlockListDB instance = new BlockListDB();
-    final HashSet<String> blockList = new HashSet<String>();
-
+    private static final BlockListDB instance = new  BlockListDB();
+    final AtomicReference<HashSet<String>> blockList = new AtomicReference<>(new HashSet<String>());
     public static BlockListDB getInstance() {
         return instance;
     }
 
-    public boolean isBlocked(String domain) {
-        return blockList.contains(domain);
+
+    public boolean isBlocked(String domain){
+        return blockList.get().contains(domain);
     }
 
+
+
     public void initialize(Context context) {
-        this.blockList.clear();
+        blockList.set(new HashSet<>());
         try{
             InputStream inputStream = context.openFileInput("blocklist");
             if (inputStream != null){
@@ -33,7 +36,7 @@ public class BlockListDB {
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String site = "";
                 while ( (site = bufferedReader.readLine()) != null ) {
-                    blockList.add(site);
+                    blockList.get().add(site);
                 }
                 inputStream.close();
             }
@@ -43,5 +46,6 @@ public class BlockListDB {
 
         }
 
+        Log.i("DB","Added shit book");
     }
 }

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:anom/Logic/passwordManager/onsSave.dart';
+import 'package:anom/Logic/passwordManager/onSave.dart';
 import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:anom/Logic/passwordManager/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class AddOrEdit {
   late Function state;
 
   late int index;
-  late Password password;
+  late Passwords password;
 
   bool boot = true;
   void onBoot(BuildContext context) {

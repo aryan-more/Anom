@@ -84,7 +84,6 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         Set<InetAddress> known = new HashSet<>();
         List<InetAddress> out = new ArrayList<>();
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(VpnService.CONNECTIVITY_SERVICE);
-        // Seriously, Android? Seriously?
         NetworkInfo activeInfo = cm.getActiveNetworkInfo();
         if (activeInfo == null)
             throw new VpnNetworkException("No DNS Server");
@@ -136,7 +135,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         // Load the block list
         try {
             dnsPacketProxy.initialize(vpnService, upstreamDnsServers);
-            vpnWatchDog.initialize(false);
+            vpnWatchDog.initialize(FileHelper.loadCurrentSettings(vpnService).watchDog);
         } catch (InterruptedException e) {
             return;
         }
@@ -414,7 +413,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
     private ParcelFileDescriptor configure() throws VpnNetworkException {
         Log.i(TAG, "Configuring" + this);
 
-        Configuration config = new Configuration();
+        Configuration config = FileHelper.loadCurrentSettings(vpnService);
 
         // Get the current DNS servers before starting the VPN
         List<InetAddress> dnsServers = getDnsServers(vpnService);

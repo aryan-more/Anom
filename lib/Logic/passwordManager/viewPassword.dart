@@ -1,4 +1,4 @@
-import 'package:anom/Logic/passwordManager/onsSave.dart';
+import 'package:anom/Logic/passwordManager/onSave.dart';
 import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +9,7 @@ class ViewPassword {
   bool obscure = true;
 
   late int index;
-  late Password password;
+  late Passwords password;
   void onBoot(BuildContext context) {
     if (boot) {
       var temp = ModalRoute.of(context)!.settings.arguments as Map;

@@ -2,7 +2,7 @@ import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:flutter/material.dart';
 
 class PasswordMenu {
-  late Password password;
+  late Passwords password;
   bool boot = true;
   void loadPassword(BuildContext context) {
     if (boot) {

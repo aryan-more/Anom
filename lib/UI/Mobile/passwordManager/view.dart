@@ -10,6 +10,12 @@ class ViewPasswordMobile extends StatefulWidget {
 
 class _ViewPasswordMobileState extends State<ViewPasswordMobile> with ViewPassword {
   @override
+  void dispose() {
+    super.dispose();
+    password.forgetDecrypted();
+  }
+
+  @override
   Widget build(BuildContext context) {
     onBoot(context);
     return Scaffold(

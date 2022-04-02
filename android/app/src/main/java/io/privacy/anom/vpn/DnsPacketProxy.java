@@ -43,8 +43,7 @@ public class DnsPacketProxy {
 
     static {
         try {
-            // Let's use a guaranteed invalid hostname here, clients are not supposed to use
-            // our fake values, the whole thing just exists for negative caching.
+
             Name name = new Name("this.is.an.invalid.address.");
             NEGATIVE_CACHE_SOA_RECORD = new SOARecord(name, DClass.IN, NEGATIVE_CACHE_TTL_SECONDS,
                     name, name, 0, 0, 0, 0, NEGATIVE_CACHE_TTL_SECONDS);

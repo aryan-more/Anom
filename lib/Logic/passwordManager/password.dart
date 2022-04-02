@@ -3,13 +3,19 @@ import 'dart:typed_data';
 
 import 'package:anom/Logic/secureio.dart';
 
-class Password {
+class Passwords {
   List passwords = [];
   late List<int> hashedPassword;
   late Uint8List _bin;
+  late bool saveExist;
 
   Future<void> load() async {
     _bin = await readBin(filename: "passwords");
+  }
+
+  void forgetDecrypted() {
+    passwords = [];
+    hashedPassword = [];
   }
 
   bool checkPassword(String password) {
@@ -22,7 +28,8 @@ class Password {
   }
 
   Future<bool> exist() async {
-    return (await (await getFile("passwords")).exists());
+    saveExist = (await (await getFile("passwords")).exists());
+    return saveExist;
   }
 
   Future<void> dump() async {

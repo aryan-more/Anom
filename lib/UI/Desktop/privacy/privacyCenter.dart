@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart' as spin;
 
 class PrivacyCenterDesktop extends StatefulWidget {
-  const PrivacyCenterDesktop({Key? key}) : super(key: key);
+  const PrivacyCenterDesktop({Key? key, required this.center}) : super(key: key);
+  final PrivacyCenter center;
 
   @override
   _PrivacyCenterDesktopState createState() => _PrivacyCenterDesktopState();
 }
 
-class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> with PrivacyCenter {
+class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> {
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -26,16 +27,16 @@ class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> with Privac
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: toBlock.length,
+                    itemCount: widget.center.toBlock.length,
                     itemBuilder: (context, index) => CheckboxListTile(
-                      value: toBlock[index]["Enable"],
+                      value: widget.center.toBlock[index]["Enable"],
                       onChanged: (x) {
                         setState(() {
-                          toBlock[index]["Enable"] = x;
+                          widget.center.toBlock[index]["Enable"] = x;
                         });
                       },
-                      title: Text(capitalize(toBlock[index]["Title"])),
-                      subtitle: Text(toBlock[index]["Subtitle"]),
+                      title: Text(capitalize(widget.center.toBlock[index]["Title"])),
+                      subtitle: Text(widget.center.toBlock[index]["Subtitle"]),
                     ),
                   ),
                 ),
@@ -43,13 +44,22 @@ class _PrivacyCenterDesktopState extends State<PrivacyCenterDesktop> with Privac
                   padding: const EdgeInsets.all(8.0),
                   child: TextButton(
                     onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const Dialog(
+                          backgroundColor: Colors.transparent,
+                          child: spin.SpinKitRing(color: Colors.blue),
+                        ),
+                        barrierDismissible: false,
+                      );
                       List<String> block = [];
-                      for (Map i in toBlock) {
+                      for (Map i in widget.center.toBlock) {
                         if (i["Enable"]) {
                           block.add(i["Title"]);
                         }
                       }
-                      print(await callNativeWin(block));
+                      await callNativeWin(block);
+                      Navigator.of(context).pop();
                     },
                     child: const Text("Block"),
                   ),

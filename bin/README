@@ -1,0 +1,2 @@
+This Folder Contains Manifest files for windows build and should be placed at windows\runner\runner.exe.manifest
+Use python script for automated copy and rename

@@ -1,9 +1,11 @@
 import 'package:anom/Logic/passwordManager/login.dart';
 import 'package:anom/UI/Mobile/drawer.dart';
+import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:flutter/material.dart';
 
 class LoginPasswordManagerMobile extends StatefulWidget {
-  const LoginPasswordManagerMobile({Key? key}) : super(key: key);
+  const LoginPasswordManagerMobile({Key? key, required this.passwords}) : super(key: key);
+  final Passwords passwords;
 
   @override
   _LoginPasswordManagerMobileState createState() => _LoginPasswordManagerMobileState();
@@ -12,7 +14,6 @@ class LoginPasswordManagerMobile extends StatefulWidget {
 class _LoginPasswordManagerMobileState extends State<LoginPasswordManagerMobile> with LoginLogic {
   @override
   Widget build(BuildContext context) {
-    loadPassword(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login Password Manager"),
@@ -52,7 +53,7 @@ class _LoginPasswordManagerMobileState extends State<LoginPasswordManagerMobile>
               width: double.infinity,
               child: TextButton.icon(
                   onPressed: () {
-                    login(context: context);
+                    login(context: context, password: widget.passwords);
                   },
                   label: const Text("Login"),
                   icon: const Icon(Icons.arrow_right)),

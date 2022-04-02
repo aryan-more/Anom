@@ -2,6 +2,13 @@ import 'dart:convert';
 
 import 'package:anom/Logic/secureio.dart';
 
+String capitalize(String original) {
+  String capitalized = "";
+  capitalized += original[0].toUpperCase();
+  capitalized += original.substring(1).toLowerCase();
+  return capitalized;
+}
+
 class PrivacyCenter {
   List<Map<String, dynamic>> toBlock = [
     {"Title": "tracker", "Subtitle": "Blocks Trackers for better privacy", "Enable": false},
@@ -9,12 +16,6 @@ class PrivacyCenter {
     {"Title": "adult", "Subtitle": "Blocks Adult Websites", "Enable": false},
     {"Title": "social", "Subtitle": "Blocks Social Media Websites", "Enable": false},
   ];
-  String capitalize(String original) {
-    String capitalized = "";
-    capitalized += original[0].toUpperCase();
-    capitalized += original.substring(1).toLowerCase();
-    return capitalized;
-  }
 
   Future<void> getSavedPrefernce() async {
     if (await (await getFile("block.json")).exists()) {

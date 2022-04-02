@@ -5,8 +5,9 @@ class DrawerRoute extends StatelessWidget {
   // double height = 0;
   final int index;
   final routes = [
-    [0, "Privacy Center", "/privacycenter", Icons.shield],
-    [1, "Password Manager", "/PasswordManagerLoading", Icons.vpn_key]
+    [0, "Privacy Center", "/privacyCenter", Icons.shield],
+    [1, "Password Manager", "/loadPasswords", Icons.vpn_key],
+    [2, "Settings", "/settings", Icons.settings]
   ];
 
   @override
@@ -36,6 +37,8 @@ class DrawerRoute extends StatelessWidget {
                       onTap: () {
                         if (pos == index) {
                           Navigator.of(context).pop();
+                        } else {
+                          Navigator.of(context).pushNamed(routes[pos][2] as String);
                         }
                       },
                     )),

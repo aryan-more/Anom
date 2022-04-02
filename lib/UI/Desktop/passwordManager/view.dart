@@ -11,6 +11,11 @@ class ViewPasswordDesktop extends StatefulWidget {
 
 class _ViewPasswordDesktopState extends State<ViewPasswordDesktop> with ViewPassword, GetGeometry {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     getGeometry(context);
     onBoot(context);

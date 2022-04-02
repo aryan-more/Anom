@@ -2,36 +2,94 @@ import 'package:anom/Native/Android/plugin.dart';
 import 'package:anom/Native/blockSubjects.dart';
 import 'package:anom/UI/Mobile/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart' as spin;
 
 class PrivacyCenterMobile extends StatefulWidget {
-  const PrivacyCenterMobile({Key? key}) : super(key: key);
+  const PrivacyCenterMobile({Key? key, required this.center}) : super(key: key);
 
+  final PrivacyCenter center;
   @override
   _PrivacyCenterMobileState createState() => _PrivacyCenterMobileState();
 }
 
-class _PrivacyCenterMobileState extends State<PrivacyCenterMobile> with PrivacyCenter {
+class _PrivacyCenterMobileState extends State<PrivacyCenterMobile> {
+  String status = "Loading";
+
+  void onBoot() async {
+    bool result = await getServiceStatus();
+    await Future.delayed(const Duration(milliseconds: 300));
+    setState(() {
+      status = result ? "Stop" : "Start";
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    onBoot();
+  }
+
+  void applyChanges() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Dialog(
+        backgroundColor: Colors.transparent,
+        child: spin.SpinKitRing(color: Colors.blue),
+      ),
+      barrierDismissible: false,
+    );
+    List<String> block = [];
+    for (Map i in widget.center.toBlock) {
+      if (i["Enable"]) {
+        block.add(i["Title"]);
+      }
+    }
+    try {
+      status = (await nativeCall(block)) ? "Stop" : "Start";
+      await widget.center.savePrefernce();
+      Navigator.of(context).pop();
+      setState(() {});
+    } catch (_) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Something Went Wrong!"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            )
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Privacy Center"),
+        title: const Text("Privacy Center"),
       ),
       drawer: DrawerRoute(index: 0),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: toBlock.length,
+              itemCount: widget.center.toBlock.length,
               itemBuilder: (context, index) => CheckboxListTile(
-                value: toBlock[index]["Enable"],
+                value: widget.center.toBlock[index]["Enable"],
                 onChanged: (x) {
                   setState(() {
-                    toBlock[index]["Enable"] = x;
+                    widget.center.toBlock[index]["Enable"] = x;
                   });
                 },
-                title: Text(capitalize(toBlock[index]["Title"])),
-                subtitle: Text(toBlock[index]["Subtitle"]),
+                title: Text(capitalize(widget.center.toBlock[index]["Title"])),
+                subtitle: Text(widget.center.toBlock[index]["Subtitle"]),
               ),
             ),
           ),
@@ -39,17 +97,11 @@ class _PrivacyCenterMobileState extends State<PrivacyCenterMobile> with PrivacyC
             padding: const EdgeInsets.all(12.0),
             child: TextButton(
               onPressed: () async {
-                List<String> block = [];
-                for (Map i in toBlock) {
-                  if (i["Enable"]) {
-                    block.add(i["Title"]);
-                  }
-                }
-                await nativeCall(block);
+                applyChanges();
               },
               child: SizedBox(
                 child: Text(
-                  "Block",
+                  status,
                   textAlign: TextAlign.center,
                 ),
                 width: double.infinity,

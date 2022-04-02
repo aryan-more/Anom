@@ -11,6 +11,19 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+/**
+ * Ensures that the connection is alive and sets various timeouts and delays in response.
+ * <p>
+ * The implementation is a bit weird: Success and Failure cases are both handled in the timeout
+ * case. When a packet is received, we simply store the time.
+ * <p>
+ * If poll() times out and we have not seen a packet after we last sent a ping, then we force
+ * a reconnect and increase the reconnect delay.
+ * <p>
+ * If poll() times out and we have seen a packet after we last sent a ping, we increase the
+ * poll() time out, causing the next check to run later, and send a ping packet.
+ */
+
 class VpnWatchdog {
     private static final String TAG = "VpnWatchDog";
 
@@ -54,7 +67,12 @@ class VpnWatchdog {
         this.target = target;
     }
 
-
+    /**
+     * An initialization method. Sleeps the penalty and sends initial packet.
+     *
+     * @param enabled If the watchdog should be enabled.
+     * @throws InterruptedException If interrupted
+     */
     void initialize(boolean enabled) throws InterruptedException {
         Log.d(TAG, "initialize: Initializing watchdog");
 

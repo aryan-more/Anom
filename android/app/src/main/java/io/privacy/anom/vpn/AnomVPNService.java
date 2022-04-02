@@ -1,7 +1,7 @@
 package io.privacy.anom.vpn;
 
 
-import android.app.NotificationChannel;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -20,13 +20,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 
 import java.lang.ref.WeakReference;
 
 import io.privacy.anom.Configuration;
+import io.privacy.anom.FileHelper;
 import io.privacy.anom.MainActivity;
 import io.privacy.anom.R;
 
@@ -34,28 +34,14 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
     public static final int NOTIFICATION_ID_STATE = 10;
     public static final int REQUEST_CODE_START = 43;
     public static final int REQUEST_CODE_PAUSE = 42;
+
     public static final String VPN_UPDATE_STATUS_INTENT = "io.privacy.anom.VPN_UPDATE_STATUS";
 
     public enum Command {
         START, STOP, PAUSE, RESUME
     }
-    public void showVPNNotification(String msg){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("io.privacy.anom.vpn.notification", "anom", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Nothing");
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "io.privacy.anom.vpn.notification")
-                .setSmallIcon(R.drawable.launch_background)
-                .setContentTitle("VPN Update")
-                .setContentText(msg)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(1, builder.build());
 
-    }
 
 
     private static class MyHandler extends Handler {
@@ -107,19 +93,19 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
     public static String vpnStatusToTextId(int status) {
         switch (status) {
             case VPN_STATUS_STARTING:
-                return "VPN STATUS STARTING";
+                return "STARTING VPN";
             case VPN_STATUS_RUNNING:
-                return "VPN_STATUS_RUNNING";
+                return "VPN Running";
             case VPN_STATUS_STOPPING:
-                return "VPN_STATUS_STOPPING";
+                return "STOPPING VPN";
             case VPN_STATUS_WAITING_FOR_NETWORK:
-                return "VPN_STATUS_WAITING_FOR_NETWORK";
+                return "VPN Waiting For Network";
             case VPN_STATUS_RECONNECTING:
-                return "VPN_STATUS_RECONNECTING";
+                return "VPN Reconnecting";
             case VPN_STATUS_RECONNECTING_NETWORK_ERROR:
-                return "VPN_STATUS_RECONNECTING_NETWORK_ERROR";
+                return "VPN Reconnection Network Error";
             case VPN_STATUS_STOPPED:
-                return "VPN_STATUS_STOPPED";
+                return "Vpn Stopped Successfully";
             default:
                 throw new IllegalArgumentException("Invalid vpnStatus value (" + status + ")");
         }
@@ -133,8 +119,8 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void checkStartVpnOnBoot(Context context) {
-        Log.i("BOOT", "Checking whether to start ad buster on boot");
-        Configuration config = new Configuration();
+        Log.i("BOOT", "Checking whether to start anom on boot");
+        Configuration config = FileHelper.loadCurrentSettings(context);
         if (config == null || !config.autoStart) {
             return;
         }
@@ -203,14 +189,22 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void pauseVpn() {
         stopVpn();
-       showVPNNotification("Pause");
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID_STATE, new NotificationCompat.Builder(this, "io.privacy.anom.vpn.notification")
+                .setSmallIcon(R.mipmap.ic_launcher) // TODO: Notification icon
+                .setPriority(Notification.PRIORITY_LOW)
+                .setContentTitle("Vpn Paused")
+                .setContentIntent(PendingIntent.getService(this, REQUEST_CODE_START, getResumeIntent(this), PendingIntent.FLAG_ONE_SHOT))
+                .build());
     }
 
     private void updateVpnStatus(int status) {
         vpnStatus = status;
-        String notificationTextId = vpnStatusToTextId(status);
-        showVPNNotification(notificationTextId);
+        String notificationText = vpnStatusToTextId(status);
+        notificationBuilder.setContentTitle(notificationText);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startForeground(NOTIFICATION_ID_STATE, notificationBuilder.build());
 
         Intent intent = new Intent(VPN_UPDATE_STATUS_INTENT);
         intent.putExtra(VPN_UPDATE_STATUS_EXTRA, status);
@@ -220,7 +214,6 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void startVpn() {
-        showVPNNotification("Starting VPN");
         updateVpnStatus(VPN_STATUS_STARTING);
 
         registerReceiver(connectivityChangedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -238,8 +231,9 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
         vpnThread.stopThread();
         vpnThread.startThread();
     }
-
-
+    private final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "io.privacy.anom.vpn.notification")
+            .setSmallIcon(R.drawable.launch_background) // TODO: Notification icon
+            .setPriority(Notification.PRIORITY_MIN);
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void stopVpnThread() {
         vpnThread.stopThread();
@@ -317,5 +311,6 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
             reconnect();
         }
     }
+
 
 }
