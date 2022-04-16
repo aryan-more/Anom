@@ -32,9 +32,12 @@ dependencies:
   flutter_spinkit: ^5.1.0
   encrypt: ^5.0.1
   crypto: ^3.0.1
+  sqflite_common_ffi: ^2.1.0+2
   bitsdojo_window: ^0.1.1+1
   path_provider: ^2.0.8
-  file_picker: ^4.5.1
+  googleapis: ^8.1.0
+  filesystem_picker: ^2.0.0
+  sqflite: ^2.0.2
   permission_handler: ^9.2.0
 
   # The following adds the Cupertino Icons font to your application.

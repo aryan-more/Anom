@@ -1,16 +1,22 @@
 package io.privacy.anom;
 
 
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.VpnService;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
@@ -22,6 +28,14 @@ import io.privacy.anom.vpn.AnomVPNService;
 public class MainActivity extends FlutterActivity {
     private static final String Channel = "anom";
     final int REQUEST_START_VPN = 1;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        NotificationChannels.onCreate(this);
+    }
+
     private void startService() {
         Log.i("Start", "Attempting to connect");
         Intent intent = VpnService.prepare(getContext());
@@ -80,6 +94,29 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
+
+
+
+
+    private void exportBin(byte[] data,String filename) throws IOException {
+        File path = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS);
+        try{
+
+        File file = new File(path,filename);
+        path.mkdirs();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(data);
+        outputStream.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+
+
+
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine){
         super.configureFlutterEngine(flutterEngine);
@@ -92,12 +129,27 @@ public class MainActivity extends FlutterActivity {
                         AnomwriteToFile(args,getContext());
 
                         startStopService();
-                        boolean out = AnomVPNService.vpnStatus == AnomVPNService.VPN_STATUS_RUNNING;
-                        result.success(out);
+                        result.success(null);
                     }
                     else if (call.method.equals("status")){
                         boolean out = AnomVPNService.vpnStatus == AnomVPNService.VPN_STATUS_RUNNING;
                         result.success(out);
+                    }
+                    else if (call.method.equals("export")){
+                        try {
+                            exportBin((byte[]) call.arguments,"password.sqlite3");
+                            result.success(null);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            result.error("Export Operation Failed",null,null);
+
+                        }
+                    }
+
+                    else{
+                        result.notImplemented();
+
                     }
                 }
         );

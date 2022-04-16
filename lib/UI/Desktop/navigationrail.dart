@@ -4,7 +4,8 @@ final routes = ["/privacyCenter", "/loadPasswords", "/settings"];
 
 class NavigationRouteRail extends StatelessWidget {
   final int index;
-  const NavigationRouteRail({Key? key, required this.index}) : super(key: key);
+  const NavigationRouteRail({Key? key, required this.index, this.function}) : super(key: key);
+  final Function? function;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,9 @@ class NavigationRouteRail extends StatelessWidget {
           selectedIndex: index,
           onDestinationSelected: (x) {
             if (index != x) {
+              if (function != null) {
+                function!();
+              }
               Navigator.of(context).pushReplacementNamed(routes[x]);
             }
           },

@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "" "\0"
-            VALUE "FileDescription", "Anom" "\0"
+            VALUE "CompanyName", "io.privacy" "\0"
+            VALUE "FileDescription", "anom" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Anom" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 . All rights reserved." "\0"
-            VALUE "OriginalFilename", "Anom.exe" "\0"
-            VALUE "ProductName", "Anom" "\0"
+            VALUE "InternalName", "anom" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 io.privacy. All rights reserved." "\0"
+            VALUE "OriginalFilename", "anom.exe" "\0"
+            VALUE "ProductName", "anom" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

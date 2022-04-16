@@ -1,12 +1,10 @@
 import 'package:anom/Logic/passwordManager/createPassword.dart';
 import 'package:anom/UI/Desktop/appbar.dart';
 import 'package:anom/UI/Desktop/navigationrail.dart';
-import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:flutter/material.dart';
 
 class CreatePasswordDesktop extends StatefulWidget {
-  const CreatePasswordDesktop({Key? key, required this.passwords}) : super(key: key);
-  final Passwords passwords;
+  const CreatePasswordDesktop({Key? key}) : super(key: key);
 
   @override
   _CreatePasswordDesktopState createState() => _CreatePasswordDesktopState();
@@ -58,7 +56,7 @@ class _CreatePasswordDesktopState extends State<CreatePasswordDesktop> with GetG
                       ),
                       TextButton(
                         onPressed: () async {
-                          await validate(context: context, passwords: widget.passwords);
+                          await validate(context: context);
                         },
                         child: const Text("Create Password"),
                       ),

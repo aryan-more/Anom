@@ -1,7 +1,7 @@
 import 'dart:math';
 
+import 'package:anom/Logic/db/db.dart';
 import 'package:anom/Logic/passwordManager/onSave.dart';
-import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:anom/Logic/passwordManager/snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -15,13 +15,13 @@ class AddOrEdit {
   late Function state;
 
   late int index;
-  late Passwords password;
+  // late Passwords password;
 
   bool boot = true;
   void onBoot(BuildContext context) {
     if (boot) {
       var temp = ModalRoute.of(context)!.settings.arguments as Map;
-      password = temp["passwords"];
+      // password = temp["passwords"];
       index = temp["index"];
       state = temp["refresh"];
       boot = false;
@@ -31,9 +31,9 @@ class AddOrEdit {
         [passWord, "Password"]
       ];
       if (index != -1) {
-        website.text = password.passwords[index]["w"];
-        username.text = password.passwords[index]["e"];
-        passWord.text = password.passwords[index]["p"];
+        website.text = PasswordManager.allPasswords[index].decryptedwebsite;
+        username.text = PasswordManager.allPasswords[index].decryptedusername;
+        passWord.text = PasswordManager.allPasswords[index].decryptedpassword;
       }
     }
   }
@@ -42,7 +42,7 @@ class AddOrEdit {
     obscure = !obscure;
   }
 
-  void addPassword(BuildContext context) {
+  void addPassword(BuildContext context) async {
     String error = "";
     if (website.text.isEmpty) {
       error = "Website";
@@ -59,20 +59,13 @@ class AddOrEdit {
       error = "Password Cannot Smaller Than 8 Characters";
     }
     if (error.isEmpty) {
+      showLoading(context);
       if (index == -1) {
-        password.passwords.add({
-          "w": website.text,
-          "e": username.text,
-          "p": passWord.text,
-        });
+        await PasswordDB.add(Password(userName: username.text, passWord: passWord.text, webSite: website.text));
       } else {
-        password.passwords[index] = {
-          "w": website.text,
-          "e": username.text,
-          "p": passWord.text,
-        };
+        await PasswordManager.allPasswords[index].update(userName: username.text, passWord: passWord.text, webSite: website.text);
       }
-      onSave(password, context);
+      Navigator.of(context).pop();
       state(() {});
       Navigator.of(context).pop();
       // pushReplacementNamed("/passwordMenu", arguments: {"passwords": password});

@@ -51,16 +51,14 @@ void initMethodChannel(flutter::FlutterEngine *flutter_instance)
          std::unique_ptr<flutter::MethodResult<>> result)
       {
         // Use data folder during release build and use build folder during debug
-        //std::string asset_path = "build\\flutter_assets\\assets\\";
-        std::string asset_path = "data\\flutter_assets\\assets\\";
+        // std::string asset_path = "build\\flutter_assets\\assets\\";
+        // std::string asset_path = "data\\flutter_assets\\assets\\";
         std::string path;
 
         if (call.method_name().compare("privacy") == 0)
         {
-          std::string subject, line;
           auto args = *call.arguments();
           std::fstream file;
-          std::vector<std::string> simple;
           try
           {
             std::vector<std::string> websites;
@@ -68,31 +66,21 @@ void initMethodChannel(flutter::FlutterEngine *flutter_instance)
             std::vector<flutter::EncodableValue> arguments = (std::get<std::vector<flutter::EncodableValue>>(args));
             for (size_t i = 0; i < arguments.size(); i++)
             {
-              subject = std::get<std::string>(arguments[i]);
-              path = asset_path + subject;
-              bool x = FileExists(path);
-              file.open(path, std::ios::in);
-              simple.push_back(subject);
-              if (!x)
-              {
-                result->Error("Unable To Load Assets File " + asset_path + subject);
-              }
-              while (std::getline(file, line))
-              {
-                websites.push_back(line);
-              }
-              file.close();
+              websites.push_back(std::get<std::string>(arguments[i]));
             }
 
             file.open(GetHostPath(), std::ios::out);
             if (file.is_open())
             {
-              file << "# This File is Edited By Anom" << std::endl;
               for (int i = 0; i < websites.size(); i++)
               {
                 file << "0.0.0.0 " << websites[i] << std::endl;
               }
               result->Success((std::string) "Success");
+            }
+            else
+            {
+              result->Error((std::string) "Admin Privilege Required");
             }
 
             return;

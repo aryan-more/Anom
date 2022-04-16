@@ -1,3 +1,4 @@
+import 'package:anom/Logic/db/db.dart';
 import 'package:anom/Logic/passwordManager/viewPassword.dart';
 import 'package:anom/UI/Desktop/appbar.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,6 @@ class ViewPasswordDesktop extends StatefulWidget {
 }
 
 class _ViewPasswordDesktopState extends State<ViewPasswordDesktop> with ViewPassword, GetGeometry {
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     getGeometry(context);
@@ -46,57 +42,15 @@ class _ViewPasswordDesktopState extends State<ViewPasswordDesktop> with ViewPass
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    for (var item in [
-                      ["w", "Website/App"],
-                      ["e", "Usename/Email"],
-                      ["p", "Password"]
-                    ])
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item[1],
-                            style: const TextStyle(fontSize: 22),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(item[0] == "p"
-                                  ? obscure
-                                      ? "•" * 10
-                                      : password.passwords[index][item[0]]
-                                  : password.passwords[index][item[0]]),
-                              if (item[0] == "w")
-                                const SizedBox()
-                              else
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    if (item[0] == "p")
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              obscure = !obscure;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            obscure ? Icons.remove_red_eye_outlined : Icons.remove_red_eye,
-                                            color: Colors.blue,
-                                          )),
-                                    IconButton(
-                                        onPressed: () {
-                                          copy(item[0]);
-                                        },
-                                        icon: const Icon(
-                                          Icons.copy,
-                                          color: Colors.blue,
-                                        )),
-                                  ],
-                                )
-                            ],
-                          )
-                        ],
-                      ),
+                    getColumn("Website/App", PasswordManager.allPasswords[index].decryptedwebsite, ShowDetails.web, () {
+                      setState(() {});
+                    }),
+                    getColumn("Usename/Email", PasswordManager.allPasswords[index].decryptedusername, ShowDetails.username, () {
+                      setState(() {});
+                    }),
+                    getColumn("Password", PasswordManager.allPasswords[index].decryptedpassword, ShowDetails.password, () {
+                      setState(() {});
+                    }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

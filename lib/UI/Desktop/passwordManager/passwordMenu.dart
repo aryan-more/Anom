@@ -1,3 +1,4 @@
+import 'package:anom/Logic/db/db.dart';
 import 'package:anom/Logic/passwordManager/menu.dart';
 import 'package:anom/UI/Desktop/appbar.dart';
 import 'package:anom/UI/Desktop/navigationrail.dart';
@@ -13,11 +14,18 @@ class PasswordMangerMenuDesktop extends StatefulWidget {
 class _PasswordMangerMenuDesktopState extends State<PasswordMangerMenuDesktop> with PasswordMenu {
   @override
   Widget build(BuildContext context) {
-    loadPassword(context);
     return Scaffold(
       appBar: bar(),
       body: Row(
-        children: [const NavigationRouteRail(index: 1), Expanded(child: buildList(setState))],
+        children: [
+          NavigationRouteRail(
+            index: 1,
+            function: () {
+              PasswordManager.forget();
+            },
+          ),
+          Expanded(child: buildList(setState))
+        ],
       ),
       floatingActionButton: floatingActionButton(context, setState),
     );

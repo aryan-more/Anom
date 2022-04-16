@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:anom/Logic/passwordManager/password.dart';
-import 'package:anom/Logic/privacyCenter.dart';
+import 'package:anom/Logic/db/db.dart';
 import 'package:anom/Native/blockSubjects.dart';
 import 'package:anom/UI/Desktop/passwordManager/addOrEdit.dart';
 import 'package:anom/UI/Desktop/passwordManager/createPassword.dart';
@@ -25,13 +24,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   PrivacyCenter center = PrivacyCenter();
-  CustomUrls customUrls = CustomUrls();
-  Passwords paswords = Passwords();
-  await customUrls.loadUrls();
-  if (await paswords.exist()) {
-    await paswords.load();
-  }
-
+  await PasswordManager.init();
   await center.getSavedPrefernce();
 
   bool isDesktop = Platform.isWindows || Platform.isMacOS || Platform.isLinux;
@@ -42,21 +35,13 @@ void main() async {
     MaterialApp(
       routes: {
         "/": (context) => minSupport ? const Boot() : const PlatformNotSupported(),
-        "/loadPasswords": (context) => paswords.saveExist
+        "/loadPasswords": (context) => PasswordManager.saveExist
             ? isMobile
-                ? LoginPasswordManagerMobile(
-                    passwords: paswords,
-                  )
-                : LoginPasswordManagerDesktop(
-                    passwords: paswords,
-                  )
+                ? const LoginPasswordManagerMobile()
+                : const LoginPasswordManagerDesktop()
             : isMobile
-                ? CreatePasswordMobile(
-                    passwords: paswords,
-                  )
-                : CreatePasswordDesktop(
-                    passwords: paswords,
-                  ),
+                ? const CreatePasswordMobile()
+                : const CreatePasswordDesktop(),
         "/passwordMenu": (context) => isMobile ? const PasswordMangerMenuMobile() : const PasswordMangerMenuDesktop(),
         "/AddOrEditPassword": (context) => isMobile ? const AddOrEditPasswordMobile() : const AddOrEditPasswordDesktop(),
         "/viewPassword": (context) => isMobile ? const ViewPasswordMobile() : const ViewPasswordDesktop(),
@@ -69,12 +54,10 @@ void main() async {
               ),
         "/settings": (context) => isMobile
             ? SettingsMobile(
-                passwords: paswords,
-                customUrls: customUrls,
+                customUrls: center.customUrlObj,
               )
             : SettingsDesktop(
-                passwords: paswords,
-                customUrls: customUrls,
+                customUrls: center.customUrlObj,
               ),
       },
       theme: ThemeData(

@@ -1,10 +1,4 @@
-/* Copyright (C) 2016-2019 Julian Andres Klode <jak@jak-linux.org>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- */
+
 package io.privacy.anom;
 
 import android.content.Intent;
@@ -22,80 +16,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Configuration class. This is serialized as JSON using read() and write() methods.
- *
- * @author Julian Andres Klode
- */
+
 public class Configuration {
-    static final int VERSION = 2;
-    /* Default tweak level */
-    static final int MINOR_VERSION = 3;
     private static final String TAG = "Configuration";
-    public int version = 1;
-    public int minorVersion = 0;
+
     public boolean autoStart;
-    public Hosts hosts = new Hosts();
     public DnsServers dnsServers = new DnsServers();
 
     // Apologies for the legacy alternate
     public Allowlist allowlist = new Allowlist();
-    public boolean showNotification = true;
     public boolean watchDog = false;
     public boolean ipV6Support = true;
 
 
-
-
-    public void updateDNS(String oldIP, String newIP) {
-        for (Item host : dnsServers.items) {
-            if (host.location.equals(oldIP))
-                host.location = newIP;
-        }
-    }
-    public void addDNS(String title, String location, boolean isEnabled) {
-        Item item = new Item();
-        item.title = title;
-        item.location = location;
-        item.state = isEnabled ? 1 : 0;
-        dnsServers.items.add(item);
-    }
-
-    public void addURL(int index, String title, String location, int state) {
-        Item item = new Item();
-        item.title = title;
-        item.location = location;
-        item.state = state;
-        hosts.items.add(index, item);
-    }
-
-    public void removeURL(String oldURL) {
-
-        Iterator itr = hosts.items.iterator();
-        while (itr.hasNext()) {
-            Item host = (Item) itr.next();
-            if (host.location.equals(oldURL))
-                itr.remove();
-        }
-    }
-
-
-    public void disableURL(String oldURL) {
-        Log.d(TAG, String.format("disableURL: Disabling %s", oldURL));
-        Iterator itr = hosts.items.iterator();
-        while (itr.hasNext()) {
-            Item host = (Item) itr.next();
-            if (host.location.equals(oldURL))
-                host.state = Item.STATE_IGNORE;
-        }
-    }
-
-
     public static class Item {
-        public static final int STATE_IGNORE = 2;
-        public static final int STATE_DENY = 0;
         public static final int STATE_ALLOW = 1;
-        public String title;
         public String location;
         public int state;
 

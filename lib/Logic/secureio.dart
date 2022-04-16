@@ -9,6 +9,10 @@ List<int> hashSha256(String raw) {
   return sha256.convert(utf8.encode(raw)).bytes;
 }
 
+Future<bool> fileExist(String filename) async {
+  return (await getFile(filename)).exists();
+}
+
 IV getIV(List<int> raw) {
   return IV((Uint8List.fromList(md5.convert(raw).bytes)));
 }
@@ -31,14 +35,21 @@ Future<String> getPath() async {
   return "${path.path}/Anom";
 }
 
-Future<void> exportPasswords() async {
-  var path = await getExternalStorageDirectories(type: StorageDirectory.documents);
-  File file = File("${path!.first.path}/passwords.anomps");
-  print(path.first.path);
+String encrypt64({required String raw, required List<int> hashedPassword}) {
+  Key key = Key(Uint8List.fromList(hashedPassword));
+  Encrypter encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+  final encrypted = encrypter.encrypt(raw, iv: getIV(hashedPassword));
+  return encrypted.base64;
 }
 
-Future<File> getFile(String path) async {
-  return File((await getPath()) + "/$path");
+String decrypt64({required String bin, required List<int> hashedPassword}) {
+  Key key = Key(Uint8List.fromList(hashedPassword));
+  Encrypter encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+  return encrypter.decrypt(Encrypted.fromBase64(bin), iv: getIV(hashedPassword));
+}
+
+Future<File> getFile(String filename) async {
+  return File((await getPath()) + "/$filename");
 }
 
 Future<Uint8List> readBin({required String filename}) async {

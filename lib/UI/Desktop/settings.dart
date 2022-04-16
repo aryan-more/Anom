@@ -1,6 +1,6 @@
-import 'package:anom/Logic/passwordManager/onSave.dart';
-import 'package:anom/Logic/passwordManager/password.dart';
-import 'package:anom/Logic/privacyCenter.dart';
+import 'package:anom/Logic/db/db.dart';
+import 'package:anom/Logic/settings.dart';
+import 'package:anom/Native/blockSubjects.dart';
 import 'package:anom/UI/Desktop/appbar.dart';
 import 'package:anom/UI/Desktop/navigationrail.dart';
 import 'package:flutter/material.dart';
@@ -8,52 +8,14 @@ import 'package:flutter/material.dart';
 class SettingsDesktop extends StatefulWidget {
   const SettingsDesktop({
     Key? key,
-    required this.passwords,
     required this.customUrls,
   }) : super(key: key);
-  final Passwords passwords;
-  final CustomUrls customUrls;
+  final CustomUrlObj customUrls;
   @override
   State<SettingsDesktop> createState() => _SettingsDesktopState();
 }
 
-class _SettingsDesktopState extends State<SettingsDesktop> {
-  void addCustomUrls() {
-    TextEditingController controller = TextEditingController(text: widget.customUrls.tostring());
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("One url per line"),
-        content: SizedBox(
-          height: 200,
-          child: TextField(
-            controller: controller,
-            maxLines: 500,
-          ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                showLoading(context);
-                await widget.customUrls.updateUrls(controller.text);
-                Navigator.of(context).pop();
-              },
-              child: const SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 2, bottom: 2),
-                    child: Text(
-                      "Submit",
-                      textAlign: TextAlign.center,
-                    ),
-                  )))
-        ],
-        actionsAlignment: MainAxisAlignment.center,
-      ),
-    );
-  }
-
+class _SettingsDesktopState extends State<SettingsDesktop> with SettingsMixMin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +42,7 @@ class _SettingsDesktopState extends State<SettingsDesktop> {
                     ),
                     TextButton.icon(
                       onPressed: () {
-                        addCustomUrls();
+                        addCustomUrls(widget.customUrls, context);
                       },
                       icon: const Icon(Icons.add),
                       label: const Text("ADD"),
@@ -94,7 +56,7 @@ class _SettingsDesktopState extends State<SettingsDesktop> {
                   "Password Manager",
                   style: const TextStyle(fontSize: 25, color: Colors.blue),
                 ),
-                if (widget.passwords.saveExist)
+                if (PasswordManager.saveExist)
                   Column(
                     children: [
                       Row(

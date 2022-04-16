@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.lang.ref.WeakReference;
@@ -28,6 +27,7 @@ import java.lang.ref.WeakReference;
 import io.privacy.anom.Configuration;
 import io.privacy.anom.FileHelper;
 import io.privacy.anom.MainActivity;
+import io.privacy.anom.NotificationChannels;
 import io.privacy.anom.R;
 
 public class AnomVPNService extends VpnService implements Handler.Callback{
@@ -117,7 +117,7 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     public static void checkStartVpnOnBoot(Context context) {
         Log.i("BOOT", "Checking whether to start anom on boot");
         Configuration config = FileHelper.loadCurrentSettings(context);
@@ -161,7 +161,7 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
                         new Intent(context, MainActivity.class), 0));
         return intent;
     }
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand" + intent);
@@ -186,11 +186,11 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
         return Service.START_STICKY;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void pauseVpn() {
         stopVpn();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID_STATE, new NotificationCompat.Builder(this, "io.privacy.anom.vpn.notification")
+        notificationManager.notify(NOTIFICATION_ID_STATE, new NotificationCompat.Builder(this, NotificationChannels.SERVICE_PAUSED)
                 .setSmallIcon(R.mipmap.ic_launcher) // TODO: Notification icon
                 .setPriority(Notification.PRIORITY_LOW)
                 .setContentTitle("Vpn Paused")
@@ -212,7 +212,7 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void startVpn() {
         updateVpnStatus(VPN_STATUS_STARTING);
 
@@ -221,7 +221,7 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
         restartVpnThread();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void restartVpnThread() {
         if (vpnThread == null) {
             Log.i(TAG, "restartVpnThread: Not restarting thread, could not find thread.");
@@ -231,27 +231,27 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
         vpnThread.stopThread();
         vpnThread.startThread();
     }
-    private final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "io.privacy.anom.vpn.notification")
+    private final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NotificationChannels.SERVICE_RUNNING)
             .setSmallIcon(R.drawable.launch_background) // TODO: Notification icon
             .setPriority(Notification.PRIORITY_MIN);
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void stopVpnThread() {
         vpnThread.stopThread();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void waitForNetVpn() {
         stopVpnThread();
         updateVpnStatus(VPN_STATUS_WAITING_FOR_NETWORK);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void reconnect() {
         updateVpnStatus(VPN_STATUS_RECONNECTING);
         restartVpnThread();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void stopVpn() {
         Log.i(TAG, "Stopping Service");
         if (vpnThread != null)
@@ -266,14 +266,14 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
         stopSelf();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     @Override
     public void onDestroy() {
         Log.i(TAG, "Destroyed, shutting down");
         stopVpn();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     @Override
     public boolean handleMessage(Message message) {
         if (message == null) {
@@ -293,7 +293,7 @@ public class AnomVPNService extends VpnService implements Handler.Callback{
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void connectivityChanged(Intent intent) {
         if (intent.getIntExtra(ConnectivityManager.EXTRA_NETWORK_TYPE, 0) == ConnectivityManager.TYPE_VPN) {
             Log.i(TAG, "Ignoring connectivity changed for our own network");

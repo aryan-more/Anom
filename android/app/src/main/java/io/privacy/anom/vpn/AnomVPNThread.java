@@ -79,7 +79,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         this.notify = notify;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private static List<InetAddress> getDnsServers(Context context) throws VpnNetworkException {
         Set<InetAddress> known = new HashSet<>();
         List<InetAddress> out = new ArrayList<>();
@@ -108,7 +108,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         Log.i(TAG, "Vpn Thread started");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     public void stopThread() {
         Log.i(TAG, "Stopping Vpn Thread");
         if (thread != null) thread.interrupt();
@@ -127,7 +127,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     @Override
     public synchronized void run() {
         Log.i(TAG, "Starting");
@@ -194,7 +194,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         Log.i(TAG, "Exiting");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private void runVpn() throws InterruptedException, ErrnoException, IOException, VpnNetworkException {
         // Allocate the buffer for a single packet.
         byte[] packet = new byte[32767];
@@ -222,7 +222,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private boolean doOne(FileInputStream inputStream, FileOutputStream outFd, byte[] packet) throws IOException, ErrnoException, InterruptedException, VpnNetworkException {
         StructPollfd deviceFd = new StructPollfd();
         deviceFd.fd = inputStream.getFD();
@@ -318,7 +318,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         dnsPacketProxy.handleDnsRequest(readPacket);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     public void forwardPacket(DatagramPacket outPacket, IpPacket parsedPacket) throws VpnNetworkException {
         DatagramSocket dnsSocket = null;
         try {
@@ -381,7 +381,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     void configurePackages(VpnService.Builder builder, Configuration config) {
         Set<String> allowOnVpn = new HashSet<>();
         Set<String> doNotAllowOnVpn = new HashSet<>();
@@ -409,7 +409,7 @@ public class AnomVPNThread implements Runnable,DnsPacketProxy.EventLoop{
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     private ParcelFileDescriptor configure() throws VpnNetworkException {
         Log.i(TAG, "Configuring" + this);
 

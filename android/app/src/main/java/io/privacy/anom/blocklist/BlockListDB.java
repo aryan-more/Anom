@@ -46,6 +46,5 @@ public class BlockListDB {
 
         }
 
-        Log.i("DB","Added shit book");
     }
 }

@@ -29,7 +29,7 @@ import java.io.Writer;
  * Utility class for working with files.
  */
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+ 
 public final class FileHelper {
 
     /**
@@ -127,7 +127,7 @@ public final class FileHelper {
      * @return The number of fds that have events
      * @throws ErrnoException See {@link Os#poll(StructPollfd[], int)}
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+     
     public static int poll(StructPollfd[] fds, int timeout) throws ErrnoException, InterruptedException {
         while (true) {
             if (Thread.interrupted())

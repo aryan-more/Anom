@@ -1,12 +1,10 @@
 import 'package:anom/Logic/passwordManager/login.dart';
 import 'package:anom/UI/Desktop/appbar.dart';
 import 'package:anom/UI/Desktop/navigationrail.dart';
-import 'package:anom/Logic/passwordManager/password.dart';
 import 'package:flutter/material.dart';
 
 class LoginPasswordManagerDesktop extends StatefulWidget {
-  const LoginPasswordManagerDesktop({Key? key, required this.passwords}) : super(key: key);
-  final Passwords passwords;
+  const LoginPasswordManagerDesktop({Key? key}) : super(key: key);
 
   @override
   _LoginPasswordManagerDesktopState createState() => _LoginPasswordManagerDesktopState();
@@ -55,7 +53,7 @@ class _LoginPasswordManagerDesktopState extends State<LoginPasswordManagerDeskto
                 ),
                 TextButton.icon(
                     onPressed: () {
-                      login(context: context, password: widget.passwords);
+                      login(context: context);
                     },
                     label: const Text("Login"),
                     icon: const Icon(Icons.arrow_right))
