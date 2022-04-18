@@ -1,11 +1,10 @@
 import 'package:anom/Logic/db/db.dart';
-import 'package:anom/Logic/passwordManager/onSave.dart';
+import 'package:anom/Logic/db/drive.dart';
+import 'package:anom/Logic/db/synchronize.dart';
 import 'package:anom/Logic/settings.dart';
 import 'package:anom/Native/blockSubjects.dart';
-import 'package:anom/Native/plugin.dart';
 import 'package:anom/UI/Mobile/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SettingsMobile extends StatefulWidget {
   const SettingsMobile({
@@ -59,7 +58,7 @@ class _SettingsMobileState extends State<SettingsMobile> with SettingsMixMin {
                 "Password Manager",
                 style: TextStyle(fontSize: title, color: Colors.blue),
               ),
-              if (PasswordManager.saveExist)
+              if (PasswordDB.saveExist)
                 Column(
                   children: [
                     Row(
@@ -83,6 +82,27 @@ class _SettingsMobileState extends State<SettingsMobile> with SettingsMixMin {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Change Password",
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            changePassword(context, false, SynchronizeDB(), false, () async {});
+                          },
+                          icon: const Icon(Icons.edit),
+                          label: const Padding(
+                            padding: EdgeInsets.only(top: 2.0, bottom: 2),
+                            child: Text("Change"),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               const SizedBox(
@@ -96,11 +116,39 @@ class _SettingsMobileState extends State<SettingsMobile> with SettingsMixMin {
                     style: TextStyle(fontSize: subtitle),
                   ),
                   TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      import(context, () async {});
+                    },
                     icon: const Icon(Icons.south_east),
                     label: const Padding(
                       padding: EdgeInsets.only(top: 2.0, bottom: 2),
                       child: Text("Import"),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    GoogleDriveToken.saveExist ? "Sync" : "Connect Google Drive",
+                  ),
+                  TextButton.icon(
+                    onPressed: () async {
+                      if (GoogleDriveToken.saveExist) {
+                        cloudSync(context);
+                      } else {
+                        await login(context);
+                      }
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.north_west),
+                    label: Padding(
+                      padding: const EdgeInsets.only(top: 2.0, bottom: 2),
+                      child: Text(GoogleDriveToken.saveExist ? "Sync" : "Connect"),
                     ),
                   ),
                 ],

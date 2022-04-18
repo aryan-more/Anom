@@ -1,4 +1,6 @@
 import 'package:anom/Logic/db/db.dart';
+import 'package:anom/Logic/db/drive.dart';
+import 'package:anom/Logic/db/synchronize.dart';
 import 'package:anom/Logic/settings.dart';
 import 'package:anom/Native/blockSubjects.dart';
 import 'package:anom/UI/Desktop/appbar.dart';
@@ -54,20 +56,22 @@ class _SettingsDesktopState extends State<SettingsDesktop> with SettingsMixMin {
                 ),
                 const Text(
                   "Password Manager",
-                  style: const TextStyle(fontSize: 25, color: Colors.blue),
+                  style: TextStyle(fontSize: 25, color: Colors.blue),
                 ),
-                if (PasswordManager.saveExist)
+                if (PasswordDB.saveExist)
                   Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            "Export(Encrypted)",
+                            "Export",
                             style: TextStyle(fontSize: 22),
                           ),
                           TextButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              export(context);
+                            },
                             icon: const Icon(Icons.north_west),
                             label: const Padding(
                               padding: EdgeInsets.only(top: 2.0, bottom: 2),
@@ -83,19 +87,21 @@ class _SettingsDesktopState extends State<SettingsDesktop> with SettingsMixMin {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            "Export(Decrypted)",
+                            "Change Password",
                             style: TextStyle(fontSize: 22),
                           ),
                           TextButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.north_west),
+                            onPressed: () {
+                              changePassword(context, false, SynchronizeDB(), false, () async {});
+                            },
+                            icon: const Icon(Icons.edit),
                             label: const Padding(
                               padding: EdgeInsets.only(top: 2.0, bottom: 2),
-                              child: Text("Export"),
+                              child: Text("Change"),
                             ),
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 const SizedBox(
@@ -105,15 +111,44 @@ class _SettingsDesktopState extends State<SettingsDesktop> with SettingsMixMin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Import(Encrypted Only)",
+                      "Import",
                       style: TextStyle(fontSize: 22),
                     ),
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        import(context, () async {});
+                      },
                       icon: const Icon(Icons.south_east),
                       label: const Padding(
                         padding: EdgeInsets.only(top: 2.0, bottom: 2),
                         child: Text("Import"),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      GoogleDriveToken.saveExist ? "Sync" : "Connect Google Drive",
+                      style: TextStyle(fontSize: 22),
+                    ),
+                    TextButton.icon(
+                      onPressed: () async {
+                        if (GoogleDriveToken.saveExist) {
+                          await cloudSync(context);
+                        } else {
+                          await login(context);
+                        }
+                        setState(() {});
+                      },
+                      icon: const Icon(Icons.north_west),
+                      label: Padding(
+                        padding: const EdgeInsets.only(top: 2.0, bottom: 2),
+                        child: Text(GoogleDriveToken.saveExist ? "Sync" : "Connect"),
                       ),
                     ),
                   ],

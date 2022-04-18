@@ -137,7 +137,7 @@ public class MainActivity extends FlutterActivity {
                     }
                     else if (call.method.equals("export")){
                         try {
-                            exportBin((byte[]) call.arguments,"password.sqlite3");
+                            exportBin((byte[]) call.arguments,"password.anomps");
                             result.success(null);
 
                         } catch (IOException e) {

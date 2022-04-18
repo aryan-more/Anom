@@ -1,6 +1,13 @@
-import 'package:anom/Logic/secureio.dart';
-import 'package:sqflite/sqflite.dart';
+import 'dart:io';
 
-Future<Database> initNativeDB() async {
-  return await openDatabase("${await getPath()}/ps.sqlite");
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+Future<Database> initNativeDB(String path) async {
+  if (Platform.isLinux || Platform.isWindows) {
+    sqfliteFfiInit();
+
+    return await databaseFactoryFfi.openDatabase(path);
+  }
+  return await openDatabase(path);
 }

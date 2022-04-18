@@ -13,9 +13,3 @@ void showLoading(BuildContext context) {
     barrierDismissible: true,
   );
 }
-
-// Future<void> onSave(Passwords password, BuildContext context) async {
-//   showLoading(context);
-//   await password.dump();
-//   Navigator.of(context).pop();
-// }

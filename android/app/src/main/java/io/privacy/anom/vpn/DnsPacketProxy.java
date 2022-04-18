@@ -250,5 +250,3 @@ public class DnsPacketProxy {
         void queueDeviceWrite(IpPacket packet);
     }
 }
-
-

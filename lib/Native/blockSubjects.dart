@@ -117,18 +117,18 @@ class PrivacyCenter {
     if (!saveCorrupted) {
       return;
     }
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 300));
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text("Saved Preferences Are Corrupted , Switching all preferences to default."),
+              title: const Text("Saved Preferences Are Corrupted , Switching all preferences to default."),
               actions: [
                 TextButton(
                     onPressed: () async {
                       await (await getFile("block.json")).delete();
                       Navigator.of(context).pop();
                     },
-                    child: Text("OK"))
+                    child: const Text("OK"))
               ],
             ));
   }

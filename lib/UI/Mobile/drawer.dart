@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DrawerRoute extends StatelessWidget {
   DrawerRoute({Key? key, required this.index, this.func}) : super(key: key);
-  Function? func;
+  final Function? func;
   // double height = 0;
   final int index;
   final routes = [
@@ -41,9 +41,7 @@ class DrawerRoute extends StatelessWidget {
                         } else {
                           if (func != null) {
                             func!();
-                          } else {
-                            print("object");
-                          }
+                          } else {}
                           Navigator.of(context).pushNamed(routes[pos][2] as String);
                         }
                       },

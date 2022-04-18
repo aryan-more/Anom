@@ -1,8 +1,9 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:anom/Logic/secureio.dart';
 import 'package:anom/Native/blockSubjects.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 MethodChannel get methodChannel => const MethodChannel("anom");
 
@@ -42,7 +43,12 @@ Future<bool> getServiceStatus() async {
   return result;
 }
 
-Future<void> exportAnd() async {
-  var channel = methodChannel;
-  await channel.invokeMethod("export", await readBin(filename: "ps.sqlite"));
+Future<void> exportPassword() async {
+  if (Platform.isAndroid) {
+    var channel = methodChannel;
+    await channel.invokeMethod("export", await readBin(filename: "ps.sqlite"));
+  } else if (Platform.isWindows) {
+    var path = (await getApplicationDocumentsDirectory()).path;
+    (await getFile("ps.sqlite")).copy("$path/password.anomps");
+  }
 }

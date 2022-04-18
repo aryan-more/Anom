@@ -41,10 +41,9 @@ class _PrivacyCenterMobileState extends State<PrivacyCenterMobile> {
 
     try {
       await invokePrivacyMethodAndroid(widget.center);
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
       vpnStatus = await getServiceStatus();
       status = vpnStatus ? "Stop" : "Start";
-      print(status);
       await widget.center.savePrefernce();
       Navigator.of(context).pop();
       setState(() {});

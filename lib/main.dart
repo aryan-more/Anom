@@ -20,6 +20,7 @@ import 'package:anom/UI/boot.dart';
 import 'package:anom/UI/platformNotSupported.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ void main() async {
     MaterialApp(
       routes: {
         "/": (context) => minSupport ? const Boot() : const PlatformNotSupported(),
-        "/loadPasswords": (context) => PasswordManager.saveExist
+        "/loadPasswords": (context) => PasswordDB.saveExist
             ? isMobile
                 ? const LoginPasswordManagerMobile()
                 : const LoginPasswordManagerDesktop()
